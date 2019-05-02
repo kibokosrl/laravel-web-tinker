@@ -8,17 +8,17 @@ class Authorize
 {
     public function handle($request, $next)
     {
-        return $this->allowedToUseTinker()
+        return $this->allowedToUseTinker($request->user())
             ? $next($request)
             : abort(403);
     }
 
-    protected function allowedToUseTinker(): bool
+    protected function allowedToUseTinker($user): bool
     {
         if (! config('web-tinker.enabled')) {
             return false;
         }
 
-        return Gate::check('viewWebTinker');
+        return Gate::check('viewWebTinker', $user);
     }
 }
